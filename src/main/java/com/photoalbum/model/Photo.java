@@ -34,9 +34,9 @@ public class Photo {
     private String originalFileName;
 
     /**
-     * Binary photo data stored directly in Oracle database
+     * Binary photo data stored directly in PostgreSQL database as BYTEA.
+     * Migrated from Oracle to PostgreSQL according to Java check item 9999 (migrate all other Oracle-specific content): removed @Lob so Hibernate maps byte[] to PostgreSQL bytea instead of Oracle BLOB/OID.
      */
-    @Lob
     @Column(name = "photo_data", nullable = true)
     private byte[] photoData;
 
@@ -56,11 +56,12 @@ public class Photo {
     private String filePath;
 
     /**
-     * File size in bytes
+     * File size in bytes.
+     * Migrated from Oracle to PostgreSQL according to Java check item 9999 (migrate all other Oracle-specific content): removed Oracle-specific columnDefinition NUMBER(19,0).
      */
     @NotNull
     @Positive
-    @Column(name = "file_size", nullable = false, columnDefinition = "NUMBER(19,0)")
+    @Column(name = "file_size", nullable = false)
     private Long fileSize;
 
     /**
@@ -72,10 +73,11 @@ public class Photo {
     private String mimeType;
 
     /**
-     * Timestamp of upload
+     * Timestamp of upload.
+     * Migrated from Oracle to PostgreSQL according to Java check item 9999 (migrate all other Oracle-specific content): removed Oracle-specific columnDefinition TIMESTAMP DEFAULT SYSTIMESTAMP.
      */
     @NotNull
-    @Column(name = "uploaded_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT SYSTIMESTAMP")
+    @Column(name = "uploaded_at", nullable = false)
     private LocalDateTime uploadedAt;
 
     /**
