@@ -12,6 +12,7 @@
         <relativePath/>
     </parent>
 
+
     <groupId>com.photoalbum</groupId>
     <artifactId>photo-album</artifactId>
     <version>1.0.0</version>
