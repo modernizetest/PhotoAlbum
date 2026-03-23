@@ -33,7 +33,13 @@ services:
       - PGHOST=postgres-db
       - PGPORT=5432
       - PGDATABASE=photoalbum
-      # For local development only - in Azure use Managed Identity (set MANAGED_IDENTITY_NAME and MANAGED_IDENTITY_CLIENT_ID)
+      # NOTE: This docker-compose is for local development with a traditional PostgreSQL container.
+      # The application-docker.properties uses Azure Managed Identity authentication (AzurePostgresqlAuthenticationPlugin),
+      # which requires a real Azure managed identity and will fail against the local postgres container.
+      # For true local development without Azure, override spring.datasource.url with a plain JDBC URL:
+      #   e.g., SPRING_DATASOURCE_URL=jdbc:postgresql://postgres-db:5432/photoalbum
+      # and provide SPRING_DATASOURCE_USERNAME/PASSWORD (matching POSTGRES_USER/POSTGRES_PASSWORD above).
+      # In Azure (Container Apps), set MANAGED_IDENTITY_NAME and MANAGED_IDENTITY_CLIENT_ID instead.
       - MANAGED_IDENTITY_NAME=photoalbum
       - MANAGED_IDENTITY_CLIENT_ID=
     ports:

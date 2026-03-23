@@ -22,7 +22,16 @@
         "passIntegrationTests": "false",
         "securityComplianceCheck": "false"
       },
-      "status": "completed"
+      "successCriteriaStatus": {
+        "passBuild": "true",
+        "generateNewUnitTests": null,
+        "generateNewIntegrationTests": null,
+        "passUnitTests": "true",
+        "passIntegrationTests": null,
+        "securityComplianceCheck": null
+      },
+      "status": "success",
+      "taskSummary": "Successfully migrated Photo Album from Oracle Database XE 21c to Azure Database for PostgreSQL with managed identity authentication. Changes include: replaced ojdbc8 with PostgreSQL JDBC driver (42.7.7), added azure-identity-extensions (1.2.2) for credential-free managed identity auth, converted BLOB to BYTEA (removed @Lob), converted all native SQL queries to PostgreSQL syntax (ROWNUM→LIMIT/OFFSET, NVL→COALESCE, TO_CHAR→EXTRACT), updated all application properties for PostgreSQL, replaced Oracle XE in docker-compose with postgres:15, added PostgreSQL init script. Build and unit tests pass."
     }
   ],
   "metadata": {
