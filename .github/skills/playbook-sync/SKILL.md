@@ -1,0 +1,91 @@
+---
+name: playbook-sync
+description: Generate or update modernization playbook from document sources. Use this skill when the user wants to create a playbook, sync playbook from a document or GitHub issue, extract migration policies from architecture docs, or update existing playbook files with new decisions.
+---
+
+# Playbook Sync
+
+Analyze source documents and generate a modernization playbook — three markdown files that capture an organization's approved migration targets, standards, and guardrails.
+
+## User Input
+
+- **output-path** (Mandatory): The folder to save the playbook files
+- **source-file-path** (Mandatory): Path to the source file containing the document content
+
+## Output Structure
+
+```
+${output-path}/
+├── targets.md       # Approved technologies and migration decisions
+├── standards.md     # Naming, security, and compliance rules
+└── guardrails.md    # Prohibited/required technologies and patterns
+```
+
+## Principles
+
+- **Source Fidelity**: The playbook is loaded and enforced by automated agents at runtime — a fabricated policy causes wrong migration decisions. Only include content explicitly present in ${source-file-path}. If a category isn't mentioned in the source, still create the corresponding section heading but leave its body empty — do not add placeholder text or fabricated policies.
+- **Incremental Merge**: When output files already exist, merge at the **section level** — update sections with new or changed content, preserve unchanged sections verbatim. If the source explicitly removes or contradicts an existing entry, update that entry. Never drop existing content simply because the source is silent on it.
+- **Direct Policy Output**: State policies as-is. You may include brief "Reason" or "Notes" fields only when they quote or concisely summarize rationale already present in ${source-file-path}. Do not add new explanations, tool recommendations, or implementation guidance beyond what the source explicitly states — those belong elsewhere.
+
+## Classification Guide
+
+When source content could fit multiple files, use these rules:
+
+| Content | Goes in | Not in |
+|---------|---------|--------|
+| "Use Java 21" (approved target) | targets.md | guardrails.md |
+| "Java 8 is prohibited" (prohibition) | guardrails.md | targets.md |
+| "Secrets must be in Key Vault" (standard) | standards.md | guardrails.md |
+| "No hardcoded secrets" (anti-pattern) | guardrails.md | standards.md |
+| "Oracle DB → PostgreSQL" (migration) | targets.md | — |
+| "SOC 2 Type II applies" (compliance) | standards.md | — |
+
+**Rule of thumb**: targets.md says *what to use*, standards.md says *how to do it right*, guardrails.md says *what to avoid and what's mandatory*.
+
+## Workflow
+
+### Step 1: Read and Analyze Source
+
+1. Read ${source-file-path} (may be a GitHub issue export or markdown file)
+2. Check if output files already exist in ${output-path} — read them for merge comparison
+3. Classify each decision from the source into one of the three output files using the Classification Guide above
+
+### Step 2: Generate Playbook Files
+
+For each file, use the corresponding template as the structural reference, then fill in content extracted from the source.
+
+#### targets.md
+
+Use the template [targets-template](targets-template.md) for the required structure (5 sections):
+- Target Frameworks, Target Compute Services, Target Data Services, Target Integration Services, Migration Decisions
+
+#### standards.md
+
+Use the template [standards-template](standards-template.md) for the required structure (7 sections):
+- Resource Naming Conventions, Tagging Requirements, Authentication & Authorization, Secrets Management, Network Security, Encryption, Compliance Frameworks
+
+#### guardrails.md
+
+Use the template [guardrails-template](guardrails-template.md) for the required structure (3 sections):
+- Prohibited Technologies, Prohibited Patterns, Required Elements
+
+For each file: if it already exists, merge new content; if not, create it fresh.
+
+### Step 3: Validate
+
+Verify the output before finishing:
+- [ ] All three files exist in ${output-path}
+- [ ] targets.md has all 5 required sections
+- [ ] standards.md has all 7 required sections
+- [ ] guardrails.md has all 3 required sections
+- [ ] Every decision in the source document is reflected in exactly one output file
+- [ ] No content was invented beyond what the source provides
+
+### Step 4: Present Summary
+
+Report to the user:
+- Number of target technologies defined
+- Number of migration decisions captured
+- Number of prohibited technologies/patterns
+- Number of required elements
+- Sections left empty (no corresponding source content) — flag these as gaps for architect review
