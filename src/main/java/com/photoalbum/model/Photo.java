@@ -34,7 +34,7 @@ public class Photo {
     private String originalFileName;
 
     /**
-     * Binary photo data stored directly in Oracle database
+     * Binary photo data stored directly in PostgreSQL database
      */
     @Lob
     @Column(name = "photo_data", nullable = true)

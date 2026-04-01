@@ -19,7 +19,7 @@
     <packaging>jar</packaging>
 
     <name>Photo Album</name>
-    <description>A simple photo storage and gallery application built with Spring Boot and Oracle DB</description>
+    <description>A simple photo storage and gallery application built with Spring Boot and Azure Database for PostgreSQL</description>
 
     <properties>
         <java.version>1.8</java.version>
