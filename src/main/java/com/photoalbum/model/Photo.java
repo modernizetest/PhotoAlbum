@@ -57,10 +57,11 @@ public class Photo {
 
     /**
      * File size in bytes
+     * Migrated from Oracle to PostgreSQL according to java check item 9999: Remove Oracle-specific columnDefinition NUMBER(19,0).
      */
     @NotNull
     @Positive
-    @Column(name = "file_size", nullable = false, columnDefinition = "NUMBER(19,0)")
+    @Column(name = "file_size", nullable = false)
     private Long fileSize;
 
     /**
@@ -73,9 +74,10 @@ public class Photo {
 
     /**
      * Timestamp of upload
+     * Migrated from Oracle to PostgreSQL according to java check item 9999: Remove Oracle-specific columnDefinition TIMESTAMP DEFAULT SYSTIMESTAMP.
      */
     @NotNull
-    @Column(name = "uploaded_at", nullable = false, columnDefinition = "TIMESTAMP DEFAULT SYSTIMESTAMP")
+    @Column(name = "uploaded_at", nullable = false)
     private LocalDateTime uploadedAt;
 
     /**
