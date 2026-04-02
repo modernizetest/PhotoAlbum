@@ -19,7 +19,8 @@
         "generateNewUnitTests": "false",
         "passUnitTests": "true",
         "securityComplianceCheck": "false"
-      }
+      },
+      "status": "started"
     }
   ],
   "metadata": {
