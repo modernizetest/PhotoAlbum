@@ -1,0 +1,11 @@
+execute-modernization-plan
+execute-modernization-task
+validate-playbook-evidence
+validate-playbook-compliance
+execute-java-upgrade-task
+execute-upgrade-task
+integration-tests
+validation-check-consistency
+infrastructure-bicep-generation
+infrastructure-terraform-generation
+migration-oracle-to-postgresql
