@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/azure/modernize/main/schema/tasks-schema.json",
+  "description": "Tasks template for modernization plan. Generate this file alongside plan.md to track individual migration tasks.",
+  "tasks": [
+    {
+      "type": "transform",
+      "id": "001-transform-oracle-to-postgresql",
+      "description": "Migrate the Oracle Database data source to Azure Database for PostgreSQL. Replace the Oracle JDBC driver with the PostgreSQL driver, update Spring datasource configuration, convert Hibernate dialect, and adapt any Oracle-specific SQL syntax (including BLOB to bytea for photo data storage).",
+      "reason": "The application currently uses Oracle Database with Oracle-specific JDBC driver, OracleDialect, and BLOB data types. Azure Database for PostgreSQL is the target managed relational database service on Azure, eliminating the need for self-managed Oracle infrastructure.",
+      "requirements": "Replace ojdbc8 Oracle JDBC driver dependency with PostgreSQL JDBC driver. Update spring.datasource.driver-class-name and spring.jpa.database-platform from Oracle to PostgreSQL equivalents. Convert Oracle BLOB columns used to store photo binary data to PostgreSQL bytea. Convert any Oracle-specific SQL queries in repositories to PostgreSQL-compatible syntax. Update application.properties and application-docker.properties datasource URL to point to Azure Database for PostgreSQL endpoint. Configure Managed Identity authentication for the Azure Database for PostgreSQL connection, removing plaintext credentials from configuration files.",
+      "dependencies": [],
+      "skills": [
+        {
+          "name": "migration-oracle-to-postgresql",
+          "location": "builtin"
+        }
+      ],
+      "successCriteria": {
+        "passBuild": "true",
+        "generateNewUnitTests": "false",
+        "passUnitTests": "true"
+      }
+    }
+  ],
+  "metadata": {
+    "planName": "modernization-plan",
+    "projectName": "PhotoAlbum-Java",
+    "language": "java",
+    "createdAt": "2026-05-14T16:46:58+08:00",
+    "version": "1.0"
+  }
+}
