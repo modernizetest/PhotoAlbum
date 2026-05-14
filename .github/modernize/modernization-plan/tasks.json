@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "description": "Tasks template for modernization plan. Generate this file alongside plan.md to track individual migration tasks.",
+  "tasks": [
+    {
+      "type": "transform",
+      "id": "001-transform-migration-oracle-to-postgresql",
+      "description": "Migrate from Oracle Database to Azure Database for PostgreSQL with managed identity authentication",
+      "requirements": "Migrate the Photo Album application database from Oracle Database XE 21c to Azure Database for PostgreSQL. The migration must include: (1) Database schema migration - convert Oracle-specific DDL and data types to PostgreSQL equivalents, including BLOB to BYTEA conversion for photo storage; (2) Convert all Oracle-specific SQL queries in PhotoRepository (including native queries using ROWNUM, TO_CHAR, and analytical functions) to PostgreSQL-compatible syntax; (3) Update JDBC driver from ojdbc8 to PostgreSQL JDBC driver; (4) Configure Spring Boot to use PostgreSQL dialect instead of OracleDialect; (5) Implement managed identity authentication for secure, credential-free database access using Azure SDK; (6) Update application.properties with PostgreSQL connection configuration; (7) Maintain all existing functionality including photo upload, retrieval, deletion, and navigation features; (8) Ensure backward compatibility with existing data structures and API contracts. Authentication method: Managed Identity (Azure-native, secure, credential-free).",
+      "environmentConfiguration": null,
+      "skills": [
+        {
+          "name": "migration-oracle-to-postgresql",
+          "location": "builtin"
+        }
+      ],
+      "successCriteria": {
+        "passBuild": "true",
+        "generateNewUnitTests": "false",
+        "passUnitTests": "true"
+      }
+    },
+    {
+      "type": "containerization",
+      "id": "002-containerization-photo-album",
+      "description": "Validate and update the existing Dockerfile to ensure the Photo Album application is properly containerized for Azure Container Apps deployment",
+      "requirements": "Review and update the existing Dockerfile at the project root to ensure it correctly builds and packages the Photo Album Spring Boot application. The containerized image must: (1) Successfully build the Maven project and produce a runnable JAR; (2) Expose port 8080 for HTTP traffic; (3) Support environment variable injection for PostgreSQL connection settings and managed identity configuration needed for Azure Container Apps; (4) Be compatible with Azure Container Apps runtime requirements.",
+      "dockerfilePath": "Dockerfile",
+      "dependencies": [
+        "001-transform-migration-oracle-to-postgresql"
+      ]
+    },
+    {
+      "type": "deployment",
+      "id": "003-deployment-azure-container-apps",
+      "description": "Deploy the Photo Album application to Azure Container Apps with Azure Database for PostgreSQL",
+      "requirements": "Provision and deploy the containerized Photo Album application to Azure Container Apps. The deployment must include: (1) Provision Azure Container Apps environment and container app using Bicep IaC; (2) Provision or reference an existing Azure Database for PostgreSQL Flexible Server; (3) Configure managed identity on the container app and grant it access to the PostgreSQL database for credential-free authentication; (4) Set all required environment variables (database host, name, port, Spring profile) in the container app configuration; (5) Push the Docker image to Azure Container Registry and configure the container app to pull from it; (6) Configure ingress to expose the application publicly on port 8080; (7) Ensure the deployed application retains all existing functionality (photo upload, retrieval, deletion, navigation).",
+      "targetAzureService": "Azure Container Apps",
+      "resourceStatus": "Create new",
+      "deploymentTool": "bicep",
+      "skills": [
+        {
+          "name": "azcli-containerapp-deploy",
+          "location": "builtin"
+        }
+      ],
+      "dependencies": [
+        "002-containerization-photo-album"
+      ]
+    }
+  ],
+  "metadata": {
+    "planName": "modernization-plan",
+    "projectName": "Photo Album Java Application",
+    "language": "java",
+    "createdAt": "2026-03-20T07:17:16.459Z",
+    "version": "1.0"
+  }
+}
