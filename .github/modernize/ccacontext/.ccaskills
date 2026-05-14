@@ -1,0 +1,17 @@
+execute-modernization-plan
+validate-playbook-evidence
+execute-upgrade-task
+execute-java-upgrade-task
+integration-tests
+execute-modernization-task
+validate-playbook-compliance
+validation-check-consistency
+infrastructure-bicep-generation
+infrastructure-terraform-generation
+azcli-appservice-deploy
+azcli-containerapp-deploy
+azcli-appservicemi-deploy
+azcli-aks-deploy
+azcli-functionapp-deploy
+containerization
+migration-oracle-to-postgresql
