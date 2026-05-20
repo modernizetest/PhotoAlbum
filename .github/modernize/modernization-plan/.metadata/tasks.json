@@ -15,6 +15,7 @@
           "location": "builtin"
         }
       ],
+      "status": "started",
       "successCriteria": {
         "passBuild": "true",
         "generateNewUnitTests": "false",
