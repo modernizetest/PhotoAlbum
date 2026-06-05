@@ -1,0 +1,59 @@
+You are enriching a framework-neutral SKELETON of a Java web service's REST endpoints with
+the SEMANTIC facts that static syntax cannot recover. This is Layer 1 of Step 3a (composite
+scenario coverage). The skeleton was produced by the MANDATORY static-analysis tool
+(endpoint-model.json, built by codeanalyzer); it already contains the SYNTACTIC facts
+(controller class, handler signature, path, HTTP method, parameter names/types/kinds, DTO
+schemas, and the deterministic resource edges). Do NOT restate or alter any syntactic fact.
+Do NOT invent endpoints, parameters, or paths that are not in the skeleton, except for
+`inferredParameters` on endpoints explicitly marked
+`"paramExtraction":"unsupported-at-symbol-level"` (Servlet handlers that read request
+attributes at runtime).
+
+Produce a JSON object matching this shape and merge it back into endpoint-model.json:
+
+{
+  "endpoints": [
+    {
+      "id": "<endpoint id from the skeleton, verbatim>",
+      "functionalSummary": "<1 sentence: what business operation this endpoint performs>",
+      "interParamDependencies": [
+        {
+          "relationType": "<one of: AllOrNone | Requires | OnlyOne | Or | ZeroOrOne | Arithmetic | Complex>",
+          "involvedParams": ["<param name>", "..."],
+          "constraintLogic": "<plain-language rule, e.g. 'if page is set then size must be set'>"
+        }
+      ],
+      "parameterConstraints": [
+        { "name": "<existing param name>", "valueConstraints": ["<e.g. '> 0'>", "<'non-empty'>"] }
+      ],
+      "inferredParameters": [
+        { "name": "<inferred request param>", "type": "<java type>", "kind": "<path|query|header|body|form|cookie>", "valueConstraints": [] }
+      ]
+    }
+  ],
+  "semanticEdges": [
+    {
+      "from": "<endpoint id that PRODUCES a resource/state>",
+      "to": "<endpoint id that CONSUMES it>",
+      "type": "<producer-consumer | database>",
+      "rationale": "<why: e.g. 'POST /orders creates the orderId that GET /orders/{id} reads'>"
+    }
+  ]
+}
+
+Rules:
+- relationType MUST be exactly one of the 7 Martin-Lopez IPD categories listed above.
+- Only emit an interParamDependency when the parameters genuinely co-constrain each other.
+- Only emit `inferredParameters` for endpoints with paramExtraction == "unsupported-at-symbol-level".
+- `semanticEdges` type MUST be "producer-consumer" or "database" only (resource edges are
+  added by static analysis, not by you). Reference only endpoint ids present in the skeleton.
+- When you merge enrichment into endpoint-model.json, tag every field you add with
+  "provenance": "LLM": each interParamDependency, every ODG node functionalSummary you fill,
+  and every semanticEdge. The resource edges already in the model stay "provenance": "SA".
+- If a field has nothing to add, use an empty array (or null for functionalSummary).
+
+After merging, run `python endpoint-model-sa.py validate <endpoint-model.json>`. The tool
+re-checks the merged model deterministically: producer-consumer / database edges must be
+provenance LLM, resource edges must be provenance SA, IPD relationType must be in the catalog,
+and ODG nodes must equal the endpoint ids exactly. Fix any reported violation before authoring
+scenarios.
