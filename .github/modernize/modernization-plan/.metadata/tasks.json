@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/azure/modernize/main/schema/tasks-schema.json",
+  "description": "Tasks template for modernization plan. Generate this file alongside plan.md to track individual migration tasks.",
+  "tasks": [
+    {
+      "type": "transform",
+      "id": "001-transform-oracle-to-postgresql",
+      "description": "Migrate the Oracle JDBC data source, JPA dialect, SQL syntax, and schema definitions to Azure Database for PostgreSQL. Replace the Oracle JDBC driver with the PostgreSQL driver. Update Spring datasource configuration and Hibernate dialect. Convert any Oracle-specific SQL in repositories to PostgreSQL-compatible equivalents, including BLOB storage (Oracle BLOB → PostgreSQL bytea). Replace plaintext credentials in application.properties with Azure Managed Identity authentication.",
+      "reason": "The application currently uses Oracle Database with Oracle-specific JDBC driver, OracleDialect, and BLOB data types, and connects using plaintext credentials. Azure Database for PostgreSQL is the target managed relational database service on Azure, eliminating the need for self-managed Oracle infrastructure. Managed Identity replaces plaintext credentials for secure, passwordless authentication.",
+      "requirements": "Replace ojdbc8 Oracle JDBC driver dependency with PostgreSQL JDBC driver. Update spring.datasource.driver-class-name and spring.jpa.database-platform from Oracle to PostgreSQL equivalents. Convert Oracle BLOB columns used to store photo binary data to PostgreSQL bytea. Update schema definitions to use PostgreSQL-compatible DDL (e.g., replace Oracle-specific types and sequences). Convert any Oracle-specific SQL queries in repositories to PostgreSQL-compatible syntax. Update application.properties and application-docker.properties datasource URL to point to Azure Database for PostgreSQL endpoint. Replace plaintext database credentials with Azure Managed Identity (passwordless) authentication.",
+      "dependencies": [],
+      "skills": [
+        {
+          "name": "migration-oracle-to-postgresql",
+          "location": "builtin"
+        }
+      ],
+      "successCriteria": {
+        "passBuild": "true",
+        "generateNewUnitTests": "false",
+        "passUnitTests": "true"
+      }
+    }
+  ],
+  "metadata": {
+    "planName": "modernization-plan",
+    "projectName": "PhotoAlbum-Java",
+    "language": "java",
+    "createdAt": "2026-05-14T16:46:58+08:00",
+    "version": "1.0"
+  }
+}
