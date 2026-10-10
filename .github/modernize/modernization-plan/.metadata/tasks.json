@@ -1,0 +1,32 @@
+{
+  "$schema": "https://raw.githubusercontent.com/azure/modernize/main/schema/tasks-schema.json",
+  "description": "Tasks template for modernization plan. Generate this file alongside plan.md to track individual migration tasks.",
+  "tasks": [
+    {
+      "type": "transform",
+      "id": "001-transform-oracle-to-postgresql",
+      "description": "Migrate the Oracle JDBC data source, JPA dialect, SQL syntax, and schema definitions to Azure Database for PostgreSQL, including conversion of photo data from Oracle BLOB to PostgreSQL bytea.",
+      "reason": "The application currently uses Oracle Database with Oracle-specific JDBC driver, OracleDialect, and BLOB data types. Azure Database for PostgreSQL is the target managed relational database service on Azure, eliminating the need for self-managed Oracle infrastructure.",
+      "requirements": "Replace the Oracle JDBC driver with the PostgreSQL JDBC driver. Update Spring datasource configuration and the Hibernate dialect for Azure Database for PostgreSQL. Migrate Oracle BLOB photo data to PostgreSQL bytea, convert Oracle-specific repository SQL to PostgreSQL-compatible syntax, and update schema definitions. Configure datasource authentication with Managed Identity and remove plaintext database credentials from application configuration. Update application.properties and application-docker.properties datasource URLs for the Azure Database for PostgreSQL endpoint.",
+      "dependencies": [],
+      "skills": [
+        {
+          "name": "migration-oracle-to-postgresql",
+          "location": "builtin"
+        }
+      ],
+      "successCriteria": {
+        "passBuild": "true",
+        "generateNewUnitTests": "false",
+        "passUnitTests": "true"
+      }
+    }
+  ],
+  "metadata": {
+    "planName": "modernization-plan",
+    "projectName": "PhotoAlbum-Java",
+    "language": "java",
+    "createdAt": "2026-05-14T16:46:58+08:00",
+    "version": "1.0"
+  }
+}
