@@ -6,6 +6,7 @@
       "type": "transform",
       "id": "001-transform-oracle-to-postgresql",
       "description": "Migrate the application's database from Oracle Database to Azure Database for PostgreSQL, including the data source, JPA dialect, SQL, and schema definitions.",
+      "status": "started",
       "reason": "The application currently uses Oracle Database with Oracle-specific JDBC driver, OracleDialect, and BLOB data types. Azure Database for PostgreSQL is the target managed relational database service on Azure, eliminating the need for self-managed Oracle infrastructure.",
       "requirements": "Migrate the Oracle JDBC data source, JPA dialect, SQL syntax, and schema definitions to Azure Database for PostgreSQL. Replace the Oracle JDBC driver with the PostgreSQL driver, update Spring datasource configuration and Hibernate dialect, and convert Oracle-specific SQL to PostgreSQL-compatible equivalents. Migrate photo BLOB storage to PostgreSQL bytea. Use Managed Identity for authentication to Azure Database for PostgreSQL.",
       "dependencies": [],
